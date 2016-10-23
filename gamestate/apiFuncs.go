@@ -1,14 +1,14 @@
 package gamestate
 
 import (
-	"math/rand"
 	gobj "github.com/codegp/game-runner/gameobjects"
+	"math/rand"
 )
 
 /*
 *		Actions and Action validators
 *   These functions are invoked by the api handler
-*/
+ */
 
 func (u *GameStateUtils) ValidateSpawnAttempt(dir gobj.Direction, toSpawnTypeID int64) *gobj.InvalidMove {
 	toSpawnType := u.GameInfo().BotType(toSpawnTypeID)

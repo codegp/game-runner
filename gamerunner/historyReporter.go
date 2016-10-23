@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/codegp/game-runner/gamestate"
 	"log"
 	"time"
-	"github.com/codegp/game-runner/gamestate"
 )
 
 func reportMatchHistory(gameStateUtils *gamestate.GameStateUtils, wc *WinCondition) {

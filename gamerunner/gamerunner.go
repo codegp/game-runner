@@ -1,8 +1,8 @@
 package main
 
 import (
-	"log"
 	"github.com/codegp/game-runner/gamestate"
+	"log"
 )
 
 type gameRunner struct {

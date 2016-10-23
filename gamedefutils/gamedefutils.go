@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/codegp/game-object-types/types"
-	"github.com/codegp/game-runner/gamestate"
 	gobj "github.com/codegp/game-runner/gameobjects"
+	"github.com/codegp/game-runner/gamestate"
 )
 
 // GameDefUtils is the object passed to game type definition to manipulate the game state
@@ -69,10 +69,12 @@ func (u *GameDefUtils) MoveBotToLocation(botID int32, loc gobj.Location) error {
 func (u *GameDefUtils) MoveItemToLocation(itemID int32, loc gobj.Location) error {
 	return nil
 }
+
 // RemoveItem -
 func (u *GameDefUtils) RemoveItem(itemID int32) error {
 	return nil
 }
+
 // GiveHealthToBot -
 func (u *GameDefUtils) GiveHealthToBot(botID int32, health float64) error {
 	bot := u.gsu.Bot(botID)
@@ -87,6 +89,7 @@ func (u *GameDefUtils) GiveHealthToBot(botID int32, health float64) error {
 
 	return nil
 }
+
 // GiveSpawnDelayToBot -
 func (u *GameDefUtils) GiveSpawnDelayToBot(botID int32, delay float64) error {
 	bot := u.gsu.Bot(botID)
@@ -97,6 +100,7 @@ func (u *GameDefUtils) GiveSpawnDelayToBot(botID int32, delay float64) error {
 	bot.SpawnDelay += delay
 	return nil
 }
+
 // GiveMoveDelayToBot -
 func (u *GameDefUtils) GiveMoveDelayToBot(botID int32, delay float64) error {
 	bot := u.gsu.Bot(botID)
@@ -107,6 +111,7 @@ func (u *GameDefUtils) GiveMoveDelayToBot(botID int32, delay float64) error {
 	bot.MoveDelay += delay
 	return nil
 }
+
 // GiveAttackDelayToBot -
 func (u *GameDefUtils) GiveAttackDelayToBot(botID int32, delay float64) error {
 	bot := u.gsu.Bot(botID)
@@ -117,22 +122,27 @@ func (u *GameDefUtils) GiveAttackDelayToBot(botID int32, delay float64) error {
 	bot.AttackDelay += delay
 	return nil
 }
+
 // BotAtLocation -
 func (u *GameDefUtils) BotAtLocation(loc gobj.Location) (gobj.Bot, error) {
 	return gobj.Bot{}, nil
 }
+
 // ItemAtLocation -
 func (u *GameDefUtils) ItemAtLocation(loc gobj.Location) (gobj.Item, error) {
 	return gobj.Item{}, nil
 }
+
 // TerrainAtLocation -
 func (u *GameDefUtils) TerrainAtLocation(loc gobj.Location) (types.TerrainType, error) {
 	return types.TerrainType{}, nil
 }
+
 // ChangeTerrainAtLocation -
 func (u *GameDefUtils) ChangeTerrainAtLocation(terrainType types.TerrainType, loc gobj.Location) error {
 	return nil
 }
+
 // MapDimensions -
 func (u *GameDefUtils) MapDimensions() (int, int, error) {
 	return 0, 0, nil

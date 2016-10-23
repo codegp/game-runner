@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/codegp/game-runner/turninformer"
 	"git.apache.org/thrift.git/lib/go/thrift"
+	"github.com/codegp/game-runner/turninformer"
 )
 
 const retryLimit int = 20

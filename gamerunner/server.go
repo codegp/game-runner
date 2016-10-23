@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/codegp/game-runner/api"
 	"git.apache.org/thrift.git/lib/go/thrift"
+	"github.com/codegp/game-runner/api"
 	"github.com/codegp/game-runner/gamestate"
 )
 

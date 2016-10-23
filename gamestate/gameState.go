@@ -5,28 +5,28 @@ import (
 )
 
 type gameState struct {
-	round      int
-	currentBot *gobj.Bot
-	bots       map[int32]*gobj.Bot
-	items      map[int32]*gobj.Item
-	currentMap gobj.Map
-	maxBotID   int32
-	maxItemID  int32
-	history    *gobj.History
+	round         int
+	currentBot    *gobj.Bot
+	bots          map[int32]*gobj.Bot
+	items         map[int32]*gobj.Item
+	currentMap    gobj.Map
+	maxBotID      int32
+	maxItemID     int32
+	history       *gobj.History
 	botsToCreate  []*gobj.Bot
 	botsToDestroy []int32
 }
 
 func newGameState() *gameState {
 	return &gameState{
-		round:      0,
-		currentBot: nil,
-		bots:       map[int32]*gobj.Bot{},
-		items:      map[int32]*gobj.Item{},
-		currentMap: nil,
-		maxBotID:   0,
-		maxItemID:  0,
-		history:    newHistory(),
+		round:         0,
+		currentBot:    nil,
+		bots:          map[int32]*gobj.Bot{},
+		items:         map[int32]*gobj.Item{},
+		currentMap:    nil,
+		maxBotID:      0,
+		maxItemID:     0,
+		history:       newHistory(),
 		botsToCreate:  []*gobj.Bot{},
 		botsToDestroy: []int32{},
 	}
