@@ -1,0 +1,14 @@
+package: github.com/codegp/game-runner
+ignore:
+  - github.com/codegp/game-runner/api
+import:
+- package: git.apache.org/thrift.git
+  subpackages:
+  - lib/go/thrift
+- package: github.com/codegp/cloud-persister
+  subpackages:
+  - models
+- package: github.com/codegp/game-object-types
+  subpackages:
+  - types
+- package: github.com/codegp/kube-client
