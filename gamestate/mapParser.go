@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 
-	gobj "github.com/codegp/game-runner/gameobjects"
 	"github.com/codegp/cloud-persister"
+	gobj "github.com/codegp/game-runner/gameobjects"
 )
 
 type dummyMap [][]*dumbLocInfo
@@ -65,7 +65,7 @@ func (u *GameStateUtils) parseMap(cp *cloudpersister.CloudPersister) {
 			if item != 0 {
 				if itemType := gameInfo.ItemType(item); itemType == nil {
 					log.Printf("Invalid itemType %d\n", item)
-				}else if _, err := u.InitItem(loc, itemType); err != nil {
+				} else if _, err := u.InitItem(loc, itemType); err != nil {
 					log.Println(err)
 				}
 			}

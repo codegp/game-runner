@@ -5,13 +5,13 @@ import (
 
 	"github.com/codegp/cloud-persister"
 	"github.com/codegp/game-object-types/types"
-	gobj "github.com/codegp/game-runner/gameobjects"
 	"github.com/codegp/game-runner/gameinfo"
+	gobj "github.com/codegp/game-runner/gameobjects"
 )
 
 type GameStateUtils struct {
-	gs *gameState
-	gameInfo  *gameinfo.GameInfo
+	gs       *gameState
+	gameInfo *gameinfo.GameInfo
 }
 
 func NewGameStateUtils(cp *cloudpersister.CloudPersister, gameInfo *gameinfo.GameInfo) *GameStateUtils {
@@ -33,7 +33,7 @@ func newInvalidMovef(msg string, args ...interface{}) *gobj.InvalidMove {
 
 /*
 *  Getters
-*/
+ */
 
 func (u *GameStateUtils) GameInfo() *gameinfo.GameInfo {
 	return u.gameInfo
@@ -99,10 +99,9 @@ func (u *GameStateUtils) OnTheMap(loc *gobj.Location) bool {
 	return true
 }
 
-
 /*
 * 	GameState manipulation
-*/
+ */
 
 func (u *GameStateUtils) IncrementRound() {
 	u.gs.round++

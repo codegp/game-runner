@@ -14,7 +14,7 @@ type GameInfo struct {
 	terrainTypeMap map[int64]*types.TerrainType
 	moveTypeMap    map[int64]*types.MoveType
 	gameType       *models.GameType
-	mapID int64
+	mapID          int64
 }
 
 func (gi *GameInfo) BotType(id int64) *types.BotType {
@@ -44,7 +44,6 @@ func (gi *GameInfo) GameType() *models.GameType {
 func (gi *GameInfo) MapID() int64 {
 	return gi.mapID
 }
-
 
 func NewGameInfo(cp *cloudpersister.CloudPersister, game *models.Game) (*GameInfo, error) {
 	attackTypeMap := map[int64]*types.AttackType{}
@@ -115,6 +114,6 @@ func NewGameInfo(cp *cloudpersister.CloudPersister, game *models.Game) (*GameInf
 		terrainTypeMap: terrainTypeMap,
 		moveTypeMap:    moveTypeMap,
 		gameType:       gameType,
-		mapID: game.MapID,
+		mapID:          game.MapID,
 	}, nil
 }
