@@ -9,6 +9,8 @@ import (
 *   These functions are invoked by the api handler
  */
 
+// ValidateSpawnAttempt checks that a spawn by the current bot in the given direction of a bot
+// with the type toSpawnTypeID is valid
 func (u *GameStateUtils) ValidateSpawnAttempt(dir gobj.Direction, toSpawnTypeID int64) *gobj.InvalidMove {
 	toSpawnType := u.GameInfo().BotType(toSpawnTypeID)
 	if toSpawnType == nil {
@@ -33,6 +35,8 @@ func (u *GameStateUtils) ValidateSpawnAttempt(dir gobj.Direction, toSpawnTypeID 
 	return nil
 }
 
+// SpawnInDirection checks that a spawn by the current bot in the given direction of a bot
+// with the type toSpawnTypeID is valid and executes the spawn if so
 func (u *GameStateUtils) SpawnInDirection(dir gobj.Direction, toSpawnTypeID int64) (*gobj.Bot, *gobj.InvalidMove) {
 	toSpawnType := u.GameInfo().BotType(toSpawnTypeID)
 	if toSpawnType == nil {
@@ -51,6 +55,8 @@ func (u *GameStateUtils) SpawnInDirection(dir gobj.Direction, toSpawnTypeID int6
 	return u.InitBot(currentBot.TeamID, spawnLoc, toSpawnType)
 }
 
+// ValidateMoveAttempt checks that a move by the current bot in the given direction
+// with the type moveTypeID is valid
 func (u *GameStateUtils) ValidateMoveAttempt(dir gobj.Direction, moveTypeID int64) *gobj.InvalidMove {
 	moveType := u.GameInfo().MoveType(moveTypeID)
 	if moveType == nil {
@@ -75,6 +81,8 @@ func (u *GameStateUtils) ValidateMoveAttempt(dir gobj.Direction, moveTypeID int6
 	return nil
 }
 
+// MoveInDirection checks that a move by the current bot in the given direction
+// with the type moveTypeID is valid and executes the move if so
 func (u *GameStateUtils) MoveInDirection(dir gobj.Direction, moveTypeID int64) *gobj.InvalidMove {
 	moveType := u.GameInfo().MoveType(moveTypeID)
 	if moveType == nil {
@@ -92,6 +100,8 @@ func (u *GameStateUtils) MoveInDirection(dir gobj.Direction, moveTypeID int64) *
 	return u.MoveBotToLocation(currentBot, dest)
 }
 
+// ValidateAttackAttempt checks that an attack by the current bot on the given location
+// with the type attackTypeID is valid
 func (u *GameStateUtils) ValidateAttackAttempt(loc *gobj.Location, attackTypeID int64) *gobj.InvalidMove {
 	attackType := u.GameInfo().AttackType(attackTypeID)
 	if attackType == nil {
@@ -118,6 +128,8 @@ func (u *GameStateUtils) ValidateAttackAttempt(loc *gobj.Location, attackTypeID 
 	return nil
 }
 
+// AttackLocation checks that an attack by the current bot on the given location
+// with the type attackTypeID is valid and executes the attack if so
 func (u *GameStateUtils) AttackLocation(loc *gobj.Location, attackTypeID int64) *gobj.InvalidMove {
 	attackType := u.GameInfo().AttackType(attackTypeID)
 	if attackType == nil {
