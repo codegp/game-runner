@@ -2,7 +2,6 @@ package gamestate
 
 import (
 	gobj "github.com/codegp/game-runner/gameobjects"
-	"math/rand"
 )
 
 /*
@@ -133,7 +132,7 @@ func (u *GameStateUtils) AttackLocation(loc *gobj.Location, attackTypeID int64) 
 	if err := u.ValidateAttackAttempt(loc, attackTypeID); err != nil {
 		return err
 	}
-	if rand.Int()%100 > int(u.AttackAccuracyWithAttackType(currentBot, attackType)*100) {
+	if u.randomizer.randomPercent() > int(u.AttackAccuracyWithAttackType(currentBot, attackType)*100) {
 		return nil
 	}
 	return u.TakeHealthFromBotAtLocation(loc, u.AttackDamageWithAttackType(currentBot, attackType))

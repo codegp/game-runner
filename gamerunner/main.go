@@ -25,7 +25,7 @@ func init() {
 }
 
 func main() {
-	gameInfo, err := gameinfo.NewGameInfo(cp, game)
+	gameInfo, err := gamestate.NewGameInfo(cp, game)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

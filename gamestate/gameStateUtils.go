@@ -5,20 +5,21 @@ import (
 
 	"github.com/codegp/cloud-persister"
 	"github.com/codegp/game-object-types/types"
-	"github.com/codegp/game-runner/gameinfo"
 	gobj "github.com/codegp/game-runner/gameobjects"
 )
 
 type GameStateUtils struct {
 	gs       *gameState
-	gameInfo *gameinfo.GameInfo
+	gameInfo *GameInfo
+	randomizer RandomizerInterface
 }
 
-func NewGameStateUtils(cp *cloudpersister.CloudPersister, gameInfo *gameinfo.GameInfo) *GameStateUtils {
+func NewGameStateUtils(cp *cloudpersister.CloudPersister, gameInfo *GameInfo) *GameStateUtils {
 	gs := newGameState()
 	gsu := &GameStateUtils{
 		gs,
 		gameInfo,
+		&Randomizer{},
 	}
 	gsu.parseMap(cp)
 	return gsu
@@ -35,7 +36,7 @@ func newInvalidMovef(msg string, args ...interface{}) *gobj.InvalidMove {
 *  Getters
  */
 
-func (u *GameStateUtils) GameInfo() *gameinfo.GameInfo {
+func (u *GameStateUtils) GameInfo() *GameInfo {
 	return u.gameInfo
 }
 
@@ -55,6 +56,16 @@ func (u *GameStateUtils) Bots() []*gobj.Bot {
 		i++
 	}
 	return bots
+}
+
+func (u *GameStateUtils) Items() []*gobj.Item {
+	items := make([]*gobj.Item, len(u.gs.items))
+	i := 0
+	for _, it := range u.gs.items {
+		items[i] = it
+		i++
+	}
+	return items
 }
 
 func (u *GameStateUtils) Bot(id int32) *gobj.Bot {
@@ -178,7 +189,7 @@ func (u *GameStateUtils) InitItem(loc *gobj.Location, itemType *types.ItemType) 
 	u.gs.maxItemID++
 	item := &gobj.Item{
 		ItemTypeID: itemType.ID,
-		ID:         u.gs.maxBotID,
+		ID:         u.gs.maxItemID,
 	}
 
 	u.gs.items[u.gs.maxItemID] = item
@@ -240,6 +251,21 @@ func (u *GameStateUtils) PickUpItemAtLoc(loc *gobj.Location) {
 		locInfo.Bot.Items = append(locInfo.Bot.Items, locInfo.Item)
 		locInfo.Item = nil
 	}
+}
+
+func (u *GameStateUtils) RemoveItem(id int32) error {
+	item := u.Item(id)
+	if item == nil {
+		return fmt.Errorf("Item with id %d does not exist", id)
+	}
+	//TODO: find item and kill it
+
+	// locInfo, err := u.LocationInfoAtLocation(loc)
+	// if err == nil && locInfo.Bot != nil && locInfo.Item != nil {
+	// 	locInfo.Bot.Items = append(locInfo.Bot.Items, locInfo.Item)
+	// 	locInfo.Item = nil
+	// }
+	return nil
 }
 
 func (u *GameStateUtils) ClearPendingBotActions() {

@@ -13,10 +13,31 @@ type GameDefUtils struct {
 	gsu *gamestate.GameStateUtils
 }
 
+// NewGameDefUtils returns an instance of GameDefUtils
 func NewGameDefUtils(gsu *gamestate.GameStateUtils) *GameDefUtils {
 	return &GameDefUtils{
 		gsu,
 	}
+}
+
+// Bots returns a list of all active bots
+func (u *GameDefUtils) Bots() []gobj.Bot {
+	botPointers := u.gsu.Bots()
+	bots := make([]gobj.Bot, len(botPointers))
+	for i, ptr := range botPointers {
+		bots[i] = *ptr
+	}
+	return bots
+}
+
+// Items returns a list of all active items
+func (u *GameDefUtils) Items() []gobj.Item {
+	itemPointers := u.gsu.Items()
+	items := make([]gobj.Item, len(itemPointers))
+	for i, ptr := range itemPointers {
+		items[i] = *ptr
+	}
+	return items
 }
 
 // InitBot initializes a new bot of type botTypeID for the team teamID at the location loc.
@@ -65,17 +86,28 @@ func (u *GameDefUtils) MoveBotToLocation(botID int32, loc gobj.Location) error {
 	return nil
 }
 
-// MoveItemToLocation -
+// MoveItemToLocation moves the item with the id itemID to the location loc
+// returns an error if there is not item with the id itemID, if location loc
+// does not exist, or if location loc is already occupied by a item
 func (u *GameDefUtils) MoveItemToLocation(itemID int32, loc gobj.Location) error {
+	item := u.gsu.Item(itemID)
+	if item == nil {
+		return fmt.Errorf("itemID %d is not valid id", itemID)
+	}
+	err := u.gsu.MoveItemToLocation(item, &loc)
+	if err != nil {
+		return fmt.Errorf("Failed no move bot, err:\n%v", err.Message)
+	}
 	return nil
 }
 
-// RemoveItem -
+// RemoveItem removes an item from the map or from possession of a bot
 func (u *GameDefUtils) RemoveItem(itemID int32) error {
-	return nil
+	return u.gsu.RemoveItem(itemID)
 }
 
-// GiveHealthToBot -
+// GiveHealthToBot increases the health of the bot with id botID by health
+// or decreases if the value of healths is negative
 func (u *GameDefUtils) GiveHealthToBot(botID int32, health float64) error {
 	bot := u.gsu.Bot(botID)
 	if bot == nil {
