@@ -5,8 +5,6 @@ import (
 
 	"github.com/codegp/cloud-persister"
 	"github.com/codegp/cloud-persister/models"
-
-	"github.com/codegp/game-runner/gameinfo"
 	"github.com/codegp/game-runner/gamestate"
 )
 

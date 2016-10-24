@@ -1,0 +1,8 @@
+language: go
+go:
+ - 1.6
+install:
+ - glide install
+script:
+ - ./testbuild.sh
+ - go test -v ./gamestate
