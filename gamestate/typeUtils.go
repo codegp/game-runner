@@ -131,31 +131,31 @@ func (u *GameStateUtils) AddDirectionToLocation(loc *gobj.Location, dir gobj.Dir
 
 	switch dir {
 	case gobj.Direction_NORTH:
-		newY = loc.Y + 1
+		newY = loc.Y - 1
 		break
 	case gobj.Direction_NORTH_EAST:
-		newY = loc.Y + 1
+		newY = loc.Y - 1
 		newX = loc.X + 1
 		break
 	case gobj.Direction_EAST:
 		newX = loc.X + 1
 		break
 	case gobj.Direction_SOUTH_EAST:
-		newY = loc.Y - 1
+		newY = loc.Y + 1
 		newX = loc.X + 1
 		break
 	case gobj.Direction_SOUTH:
-		newY = loc.Y - 1
+		newY = loc.Y + 1
 		break
 	case gobj.Direction_SOUTH_WEST:
-		newY = loc.Y - 1
+		newY = loc.Y + 1
 		newX = loc.X - 1
 		break
 	case gobj.Direction_WEST:
 		newX = loc.X - 1
 		break
 	case gobj.Direction_NORTH_WEST:
-		newY = loc.Y + 1
+		newY = loc.Y - 1
 		newX = loc.X - 1
 		break
 	}

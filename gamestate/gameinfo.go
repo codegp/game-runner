@@ -1,4 +1,4 @@
-package gameinfo
+package gamestate
 
 import (
 	"fmt"

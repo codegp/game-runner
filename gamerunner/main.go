@@ -5,8 +5,6 @@ import (
 
 	"github.com/codegp/cloud-persister"
 	"github.com/codegp/cloud-persister/models"
-
-	"github.com/codegp/game-runner/gameinfo"
 	"github.com/codegp/game-runner/gamestate"
 )
 
@@ -25,7 +23,7 @@ func init() {
 }
 
 func main() {
-	gameInfo, err := gameinfo.NewGameInfo(cp, game)
+	gameInfo, err := gamestate.NewGameInfo(cp, game)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

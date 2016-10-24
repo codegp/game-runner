@@ -1,6 +1,6 @@
 package: github.com/codegp/game-runner
 ignore:
-  - github.com/codegp/game-runner/api
+- github.com/codegp/game-runner/api
 import:
 - package: git.apache.org/thrift.git
   subpackages:
@@ -12,3 +12,6 @@ import:
   subpackages:
   - types
 - package: github.com/codegp/kube-client
+- package: github.com/stretchr/testify
+  subpackages:
+  - assert
