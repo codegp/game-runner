@@ -2,6 +2,7 @@ language: go
 go:
  - 1.6
 install:
+ - go get -v github.com/Masterminds/glide
  - glide install
 script:
  - ./testbuild.sh
