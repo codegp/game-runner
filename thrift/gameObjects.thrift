@@ -47,7 +47,7 @@ struct Bot {
   4: required double attackDelay;
   5: required double moveDelay;
   6: required double spawnDelay;
-  7: required i32 teamID;
+  7: required i64 teamID;
   8: required i64 botTypeID;
   9: required list<Item> items;
 }

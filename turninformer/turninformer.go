@@ -15,7 +15,15 @@ var _ = fmt.Printf
 var _ = bytes.Equal
 
 type TurnInformer interface {
-	StartTurn() (err error)
+	// Parameters:
+	//  - BotID
+	CreateBot(botID int32) (err error)
+	// Parameters:
+	//  - BotID
+	DestroyBot(botID int32) (err error)
+	// Parameters:
+	//  - BotID
+	StartTurn(botID int32) (err error)
 	Destroy() (err error)
 }
 
@@ -45,14 +53,168 @@ func NewTurnInformerClientProtocol(t thrift.TTransport, iprot thrift.TProtocol, 
 	}
 }
 
-func (p *TurnInformerClient) StartTurn() (err error) {
-	if err = p.sendStartTurn(); err != nil {
+// Parameters:
+//  - BotID
+func (p *TurnInformerClient) CreateBot(botID int32) (err error) {
+	if err = p.sendCreateBot(botID); err != nil {
+		return
+	}
+	return p.recvCreateBot()
+}
+
+func (p *TurnInformerClient) sendCreateBot(botID int32) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("createBot", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := TurnInformerCreateBotArgs{
+		BotID: botID,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *TurnInformerClient) recvCreateBot() (err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "createBot" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "createBot failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "createBot failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error0 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error1 error
+		error1, err = error0.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error1
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "createBot failed: invalid message type")
+		return
+	}
+	result := TurnInformerCreateBotResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	return
+}
+
+// Parameters:
+//  - BotID
+func (p *TurnInformerClient) DestroyBot(botID int32) (err error) {
+	if err = p.sendDestroyBot(botID); err != nil {
+		return
+	}
+	return p.recvDestroyBot()
+}
+
+func (p *TurnInformerClient) sendDestroyBot(botID int32) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("destroyBot", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := TurnInformerDestroyBotArgs{
+		BotID: botID,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *TurnInformerClient) recvDestroyBot() (err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "destroyBot" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "destroyBot failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "destroyBot failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error3 error
+		error3, err = error2.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error3
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "destroyBot failed: invalid message type")
+		return
+	}
+	result := TurnInformerDestroyBotResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	return
+}
+
+// Parameters:
+//  - BotID
+func (p *TurnInformerClient) StartTurn(botID int32) (err error) {
+	if err = p.sendStartTurn(botID); err != nil {
 		return
 	}
 	return p.recvStartTurn()
 }
 
-func (p *TurnInformerClient) sendStartTurn() (err error) {
+func (p *TurnInformerClient) sendStartTurn(botID int32) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -62,7 +224,9 @@ func (p *TurnInformerClient) sendStartTurn() (err error) {
 	if err = oprot.WriteMessageBegin("startTurn", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := TurnInformerStartTurnArgs{}
+	args := TurnInformerStartTurnArgs{
+		BotID: botID,
+	}
 	if err = args.Write(oprot); err != nil {
 		return
 	}
@@ -91,16 +255,16 @@ func (p *TurnInformerClient) recvStartTurn() (err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error0 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error1 error
-		error1, err = error0.Read(iprot)
+		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error5 error
+		error5, err = error4.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error1
+		err = error5
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -163,16 +327,16 @@ func (p *TurnInformerClient) recvDestroy() (err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error3 error
-		error3, err = error2.Read(iprot)
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error3
+		err = error7
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -209,10 +373,12 @@ func (p *TurnInformerProcessor) ProcessorMap() map[string]thrift.TProcessorFunct
 
 func NewTurnInformerProcessor(handler TurnInformer) *TurnInformerProcessor {
 
-	self4 := &TurnInformerProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self4.processorMap["startTurn"] = &turnInformerProcessorStartTurn{handler: handler}
-	self4.processorMap["destroy"] = &turnInformerProcessorDestroy{handler: handler}
-	return self4
+	self8 := &TurnInformerProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self8.processorMap["createBot"] = &turnInformerProcessorCreateBot{handler: handler}
+	self8.processorMap["destroyBot"] = &turnInformerProcessorDestroyBot{handler: handler}
+	self8.processorMap["startTurn"] = &turnInformerProcessorStartTurn{handler: handler}
+	self8.processorMap["destroy"] = &turnInformerProcessorDestroy{handler: handler}
+	return self8
 }
 
 func (p *TurnInformerProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -225,13 +391,103 @@ func (p *TurnInformerProcessor) Process(iprot, oprot thrift.TProtocol) (success 
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x5 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x9 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x5.Write(oprot)
+	x9.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x5
+	return false, x9
 
+}
+
+type turnInformerProcessorCreateBot struct {
+	handler TurnInformer
+}
+
+func (p *turnInformerProcessorCreateBot) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := TurnInformerCreateBotArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("createBot", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := TurnInformerCreateBotResult{}
+	var err2 error
+	if err2 = p.handler.CreateBot(args.BotID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing createBot: "+err2.Error())
+		oprot.WriteMessageBegin("createBot", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	}
+	if err2 = oprot.WriteMessageBegin("createBot", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type turnInformerProcessorDestroyBot struct {
+	handler TurnInformer
+}
+
+func (p *turnInformerProcessorDestroyBot) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := TurnInformerDestroyBotArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("destroyBot", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := TurnInformerDestroyBotResult{}
+	var err2 error
+	if err2 = p.handler.DestroyBot(args.BotID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing destroyBot: "+err2.Error())
+		oprot.WriteMessageBegin("destroyBot", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	}
+	if err2 = oprot.WriteMessageBegin("destroyBot", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
 }
 
 type turnInformerProcessorStartTurn struct {
@@ -253,7 +509,7 @@ func (p *turnInformerProcessorStartTurn) Process(seqId int32, iprot, oprot thrif
 	iprot.ReadMessageEnd()
 	result := TurnInformerStartTurnResult{}
 	var err2 error
-	if err2 = p.handler.StartTurn(); err2 != nil {
+	if err2 = p.handler.StartTurn(args.BotID); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing startTurn: "+err2.Error())
 		oprot.WriteMessageBegin("startTurn", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -326,14 +582,111 @@ func (p *turnInformerProcessorDestroy) Process(seqId int32, iprot, oprot thrift.
 
 // HELPER FUNCTIONS AND STRUCTURES
 
-type TurnInformerStartTurnArgs struct {
+// Attributes:
+//  - BotID
+type TurnInformerCreateBotArgs struct {
+	BotID int32
 }
 
-func NewTurnInformerStartTurnArgs() *TurnInformerStartTurnArgs {
-	return &TurnInformerStartTurnArgs{}
+func NewTurnInformerCreateBotArgs() *TurnInformerCreateBotArgs {
+	return &TurnInformerCreateBotArgs{}
 }
 
-func (p *TurnInformerStartTurnArgs) Read(iprot thrift.TProtocol) error {
+func (p *TurnInformerCreateBotArgs) GetBotID() int32 {
+	return p.BotID
+}
+func (p *TurnInformerCreateBotArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	var issetBotID bool = false
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField_1(iprot); err != nil {
+				return err
+			}
+			issetBotID = true
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	if !issetBotID {
+		return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("Required field BotID is not set"))
+	}
+	return nil
+}
+
+func (p *TurnInformerCreateBotArgs) readField_1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field -1: ", err)
+	} else {
+		p.BotID = v
+	}
+	return nil
+}
+
+func (p *TurnInformerCreateBotArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("createBot_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField_1(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *TurnInformerCreateBotArgs) writeField_1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("botID", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:botID: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.BotID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.botID (-1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:botID: ", p), err)
+	}
+	return err
+}
+
+func (p *TurnInformerCreateBotArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("TurnInformerCreateBotArgs(%+v)", *p)
+}
+
+type TurnInformerCreateBotResult struct {
+}
+
+func NewTurnInformerCreateBotResult() *TurnInformerCreateBotResult {
+	return &TurnInformerCreateBotResult{}
+}
+
+func (p *TurnInformerCreateBotResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -359,8 +712,8 @@ func (p *TurnInformerStartTurnArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TurnInformerStartTurnArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("startTurn_args"); err != nil {
+func (p *TurnInformerCreateBotResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("createBot_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := oprot.WriteFieldStop(); err != nil {
@@ -370,6 +723,253 @@ func (p *TurnInformerStartTurnArgs) Write(oprot thrift.TProtocol) error {
 		return thrift.PrependError("write struct stop error: ", err)
 	}
 	return nil
+}
+
+func (p *TurnInformerCreateBotResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("TurnInformerCreateBotResult(%+v)", *p)
+}
+
+// Attributes:
+//  - BotID
+type TurnInformerDestroyBotArgs struct {
+	BotID int32
+}
+
+func NewTurnInformerDestroyBotArgs() *TurnInformerDestroyBotArgs {
+	return &TurnInformerDestroyBotArgs{}
+}
+
+func (p *TurnInformerDestroyBotArgs) GetBotID() int32 {
+	return p.BotID
+}
+func (p *TurnInformerDestroyBotArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	var issetBotID bool = false
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField_1(iprot); err != nil {
+				return err
+			}
+			issetBotID = true
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	if !issetBotID {
+		return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("Required field BotID is not set"))
+	}
+	return nil
+}
+
+func (p *TurnInformerDestroyBotArgs) readField_1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field -1: ", err)
+	} else {
+		p.BotID = v
+	}
+	return nil
+}
+
+func (p *TurnInformerDestroyBotArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("destroyBot_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField_1(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *TurnInformerDestroyBotArgs) writeField_1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("botID", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:botID: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.BotID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.botID (-1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:botID: ", p), err)
+	}
+	return err
+}
+
+func (p *TurnInformerDestroyBotArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("TurnInformerDestroyBotArgs(%+v)", *p)
+}
+
+type TurnInformerDestroyBotResult struct {
+}
+
+func NewTurnInformerDestroyBotResult() *TurnInformerDestroyBotResult {
+	return &TurnInformerDestroyBotResult{}
+}
+
+func (p *TurnInformerDestroyBotResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		if err := iprot.Skip(fieldTypeId); err != nil {
+			return err
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *TurnInformerDestroyBotResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("destroyBot_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *TurnInformerDestroyBotResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("TurnInformerDestroyBotResult(%+v)", *p)
+}
+
+// Attributes:
+//  - BotID
+type TurnInformerStartTurnArgs struct {
+	BotID int32
+}
+
+func NewTurnInformerStartTurnArgs() *TurnInformerStartTurnArgs {
+	return &TurnInformerStartTurnArgs{}
+}
+
+func (p *TurnInformerStartTurnArgs) GetBotID() int32 {
+	return p.BotID
+}
+func (p *TurnInformerStartTurnArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	var issetBotID bool = false
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField_1(iprot); err != nil {
+				return err
+			}
+			issetBotID = true
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	if !issetBotID {
+		return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("Required field BotID is not set"))
+	}
+	return nil
+}
+
+func (p *TurnInformerStartTurnArgs) readField_1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field -1: ", err)
+	} else {
+		p.BotID = v
+	}
+	return nil
+}
+
+func (p *TurnInformerStartTurnArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("startTurn_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField_1(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *TurnInformerStartTurnArgs) writeField_1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("botID", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:botID: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.BotID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.botID (-1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:botID: ", p), err)
+	}
+	return err
 }
 
 func (p *TurnInformerStartTurnArgs) String() string {

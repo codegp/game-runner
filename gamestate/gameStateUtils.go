@@ -4,24 +4,25 @@ import (
 	"fmt"
 
 	"github.com/codegp/cloud-persister"
+	"github.com/codegp/cloud-persister/models"
 	"github.com/codegp/game-object-types/types"
 	gobj "github.com/codegp/game-runner/gameobjects"
 )
 
 type GameStateUtils struct {
-	gs       *gameState
-	gameInfo *GameInfo
+	gs         *gameState
+	gameInfo   *GameInfo
 	randomizer RandomizerInterface
 }
 
-func NewGameStateUtils(cp *cloudpersister.CloudPersister, gameInfo *GameInfo) *GameStateUtils {
+func NewGameStateUtils(cp *cloudpersister.CloudPersister, gameInfo *GameInfo, projects []*models.Project) *GameStateUtils {
 	gs := newGameState()
 	gsu := &GameStateUtils{
 		gs,
 		gameInfo,
 		&Randomizer{},
 	}
-	gsu.parseMap(cp)
+	gsu.parseMap(cp, projects)
 	return gsu
 }
 
@@ -88,7 +89,7 @@ func (u *GameStateUtils) BotsToCreate() []*gobj.Bot {
 	return u.gs.botsToCreate
 }
 
-func (u *GameStateUtils) BotsToDestroy() []int32 {
+func (u *GameStateUtils) BotsToDestroy() []*gobj.Bot {
 	return u.gs.botsToDestroy
 }
 
@@ -138,14 +139,14 @@ func (u *GameStateUtils) TakeHealthFromBotAtLocation(loc *gobj.Location, damage 
 
 	locInfo.Bot.Health -= damage
 	if locInfo.Bot.Health <= 0 {
-		u.gs.botsToDestroy = append(u.gs.botsToDestroy, locInfo.Bot.ID)
+		u.gs.botsToDestroy = append(u.gs.botsToDestroy, locInfo.Bot)
 		delete(u.gs.bots, locInfo.Bot.ID)
 		locInfo.Bot = nil
 	}
 	return nil
 }
 
-func (u *GameStateUtils) InitBot(teamID int32, loc *gobj.Location, botType *types.BotType) (*gobj.Bot, *gobj.InvalidMove) {
+func (u *GameStateUtils) InitBot(teamID int64, loc *gobj.Location, botType *types.BotType) (*gobj.Bot, *gobj.InvalidMove) {
 	locInfo, err := u.LocationInfoAtLocation(loc)
 	if err != nil {
 		return nil, newInvalidMovef(err.Error())
@@ -270,5 +271,5 @@ func (u *GameStateUtils) RemoveItem(id int32) error {
 
 func (u *GameStateUtils) ClearPendingBotActions() {
 	u.gs.botsToCreate = []*gobj.Bot{}
-	u.gs.botsToDestroy = []int32{}
+	u.gs.botsToDestroy = []*gobj.Bot{}
 }

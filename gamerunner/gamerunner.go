@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/codegp/game-runner/gamestate"
 	"log"
+
+	"github.com/codegp/game-runner/gamestate"
 )
 
 type gameRunner struct {
@@ -36,7 +37,7 @@ func (gr *gameRunner) checkForGameOver() (bool, *WinCondition) {
 
 func (gr *gameRunner) doGame() (*WinCondition, error) {
 	log.Println("Starting Game")
-	gr.tiManager.createNewClients(gr.gameStateUtils.BotsToCreate())
+	gr.tiManager.createBots(gr.gameStateUtils.BotsToCreate())
 	gr.gameStateUtils.ClearPendingBotActions()
 
 	for {
@@ -44,7 +45,7 @@ func (gr *gameRunner) doGame() (*WinCondition, error) {
 			return nil, err
 		}
 		if gameOver, wc := gr.checkForGameOver(); gameOver {
-			gr.tiManager.destroyAllClients()
+			gr.tiManager.destroy()
 			return wc, nil
 		}
 		// execute game type specific logic BetweenRound
@@ -61,8 +62,8 @@ func (gr *gameRunner) doRound() error {
 		}
 	}
 
-	gr.tiManager.createNewClients(gr.gameStateUtils.BotsToCreate())
-	gr.tiManager.destroyClients(gr.gameStateUtils.BotsToDestroy())
+	gr.tiManager.createBots(gr.gameStateUtils.BotsToCreate())
+	gr.tiManager.destroyBots(gr.gameStateUtils.BotsToDestroy())
 	gr.gameStateUtils.ClearPendingBotActions()
 
 	// printMap(CopyMap(gameState.CurrentMap))
@@ -74,7 +75,7 @@ func (gr *gameRunner) doRound() error {
 
 func (gr *gameRunner) doTurn() error {
 	bot := gr.gameStateUtils.CurrentBot()
-	err := gr.tiManager.startTurn(bot.ID)
+	err := gr.tiManager.startTurn(bot)
 	if err != nil {
 		return err
 	}

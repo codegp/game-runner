@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/codegp/cloud-persister"
+	"github.com/codegp/cloud-persister/models"
 	gobj "github.com/codegp/game-runner/gameobjects"
 )
 
@@ -21,7 +22,7 @@ type dumbBot struct {
 	Team   int32
 }
 
-func (u *GameStateUtils) parseMap(cp *cloudpersister.CloudPersister) {
+func (u *GameStateUtils) parseMap(cp *cloudpersister.CloudPersister, projects []*models.Project) {
 	gameInfo := u.GameInfo()
 	var dumbMap dummyMap
 
@@ -74,7 +75,7 @@ func (u *GameStateUtils) parseMap(cp *cloudpersister.CloudPersister) {
 			if bot != nil {
 				if botType := gameInfo.BotType(bot.TypeID); botType == nil {
 					log.Printf("Invalid botType %d\n", bot.TypeID)
-				} else if _, err := u.InitBot(bot.Team-1, loc, botType); err != nil {
+				} else if _, err := u.InitBot(projects[bot.Team-1].ID, loc, botType); err != nil {
 					log.Println(err)
 				}
 			}

@@ -14,7 +14,7 @@ type gameState struct {
 	maxItemID     int32
 	history       *gobj.History
 	botsToCreate  []*gobj.Bot
-	botsToDestroy []int32
+	botsToDestroy []*gobj.Bot
 }
 
 func newGameState() *gameState {
@@ -28,7 +28,7 @@ func newGameState() *gameState {
 		maxItemID:     0,
 		history:       newHistory(),
 		botsToCreate:  []*gobj.Bot{},
-		botsToDestroy: []int32{},
+		botsToDestroy: []*gobj.Bot{},
 	}
 }
 

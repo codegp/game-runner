@@ -4,8 +4,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/codegp/cloud-persister/models"
 )
 
 func fetchGameEntities() {
@@ -23,14 +21,9 @@ func fetchGameEntities() {
 		log.Fatalf("Error getting game from datastore, %v", err)
 	}
 
-	var proj *models.Project
-	for _, projID := range game.ProjectIDs {
-		proj, err = cp.GetProject(projID)
-		if err != nil {
-			log.Fatalf("failed to get projects: %v", err)
-		}
-
-		projects = append(projects, proj)
+	projects, err = cp.GetMultiProject(game.ProjectIDs)
+	if err != nil {
+		log.Fatalf("Error getting projects from datastore, %v", err)
 	}
 }
 

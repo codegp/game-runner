@@ -20,7 +20,9 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  void startTurn()")
+	fmt.Fprintln(os.Stderr, "  void createBot(i32 botID)")
+	fmt.Fprintln(os.Stderr, "  void destroyBot(i32 botID)")
+	fmt.Fprintln(os.Stderr, "  void startTurn(i32 botID)")
 	fmt.Fprintln(os.Stderr, "  void destroy()")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -116,12 +118,49 @@ func main() {
 	}
 
 	switch cmd {
-	case "startTurn":
-		if flag.NArg()-1 != 0 {
-			fmt.Fprintln(os.Stderr, "StartTurn requires 0 args")
+	case "createBot":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "CreateBot requires 1 args")
 			flag.Usage()
 		}
-		fmt.Print(client.StartTurn())
+		tmp0, err10 := (strconv.Atoi(flag.Arg(1)))
+		if err10 != nil {
+			Usage()
+			return
+		}
+		argvalue0 := int32(tmp0)
+		value0 := argvalue0
+		fmt.Print(client.CreateBot(value0))
+		fmt.Print("\n")
+		break
+	case "destroyBot":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "DestroyBot requires 1 args")
+			flag.Usage()
+		}
+		tmp0, err11 := (strconv.Atoi(flag.Arg(1)))
+		if err11 != nil {
+			Usage()
+			return
+		}
+		argvalue0 := int32(tmp0)
+		value0 := argvalue0
+		fmt.Print(client.DestroyBot(value0))
+		fmt.Print("\n")
+		break
+	case "startTurn":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "StartTurn requires 1 args")
+			flag.Usage()
+		}
+		tmp0, err12 := (strconv.Atoi(flag.Arg(1)))
+		if err12 != nil {
+			Usage()
+			return
+		}
+		argvalue0 := int32(tmp0)
+		value0 := argvalue0
+		fmt.Print(client.StartTurn(value0))
 		fmt.Print("\n")
 		break
 	case "destroy":

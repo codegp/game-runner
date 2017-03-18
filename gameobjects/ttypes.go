@@ -483,7 +483,7 @@ type Bot struct {
 	AttackDelay float64   `thrift:"attackDelay,4,required" json:"attackDelay"`
 	MoveDelay   float64   `thrift:"moveDelay,5,required" json:"moveDelay"`
 	SpawnDelay  float64   `thrift:"spawnDelay,6,required" json:"spawnDelay"`
-	TeamID      int32     `thrift:"teamID,7,required" json:"teamID"`
+	TeamID      int64     `thrift:"teamID,7,required" json:"teamID"`
 	BotTypeID   int64     `thrift:"botTypeID,8,required" json:"botTypeID"`
 	Items       []*Item   `thrift:"items,9,required" json:"items"`
 }
@@ -521,7 +521,7 @@ func (p *Bot) GetSpawnDelay() float64 {
 	return p.SpawnDelay
 }
 
-func (p *Bot) GetTeamID() int32 {
+func (p *Bot) GetTeamID() int64 {
 	return p.TeamID
 }
 
@@ -701,7 +701,7 @@ func (p *Bot) readField6(iprot thrift.TProtocol) error {
 }
 
 func (p *Bot) readField7(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 7: ", err)
 	} else {
 		p.TeamID = v
@@ -857,10 +857,10 @@ func (p *Bot) writeField6(oprot thrift.TProtocol) (err error) {
 }
 
 func (p *Bot) writeField7(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("teamID", thrift.I32, 7); err != nil {
+	if err := oprot.WriteFieldBegin("teamID", thrift.I64, 7); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:teamID: ", p), err)
 	}
-	if err := oprot.WriteI32(int32(p.TeamID)); err != nil {
+	if err := oprot.WriteI64(int64(p.TeamID)); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T.teamID (7) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {

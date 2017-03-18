@@ -28,13 +28,12 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	tiManager := newTurnInformerManager()
-	gameStateUtils := gamestate.NewGameStateUtils(cp, gameInfo)
+	gameStateUtils := gamestate.NewGameStateUtils(cp, gameInfo, projects)
 
 	// start the api server
-	server := startServer(gameStateUtils, tiManager)
+	server := startServer(gameStateUtils)
 
-	gr := newGameRunner(gameStateUtils, tiManager)
+	gr := newGameRunner(gameStateUtils, newTurnInformerManager(projects))
 	wc, err := gr.doGame()
 	if err != nil {
 		log.Fatal(err.Error())

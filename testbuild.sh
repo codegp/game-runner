@@ -10,7 +10,7 @@ function cleanup {
   rm -rf $REPO_ROOT/api
   rm  $REPO_ROOT/gamerunner/gamerunner
 }
-trap cleanup EXIT
+# trap cleanup EXIT
 
 cp  $REPO_ROOT/thrift/gameObjects.thrift $REPO_ROOT/testbuild/gameObjects.thrift
 cp  $REPO_ROOT/testbuild/testgametype.go.tmpl $REPO_ROOT/gamerunner/gametypedef.go

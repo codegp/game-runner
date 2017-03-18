@@ -9,8 +9,8 @@ import (
 	"github.com/codegp/game-runner/gamestate"
 )
 
-func startServer(gameStateUtils *gamestate.GameStateUtils, tiManager *turnInformerManager) *thrift.TSimpleServer {
-	server, err := getServer(gameStateUtils, tiManager)
+func startServer(gameStateUtils *gamestate.GameStateUtils) *thrift.TSimpleServer {
+	server, err := getServer(gameStateUtils)
 	if err != nil {
 		log.Fatalf("Error starting thrift server for game api %v", err)
 	}
@@ -25,7 +25,7 @@ func startServer(gameStateUtils *gamestate.GameStateUtils, tiManager *turnInform
 	return server
 }
 
-func getServer(gameStateUtils *gamestate.GameStateUtils, tiManager *turnInformerManager) (*thrift.TSimpleServer, error) {
+func getServer(gameStateUtils *gamestate.GameStateUtils) (*thrift.TSimpleServer, error) {
 	//transport is a thrift.TServerTransport
 	transport, err := thrift.NewTServerSocket(fmt.Sprintf("%s:9000", getIP()))
 	if err != nil {
@@ -37,16 +37,6 @@ func getServer(gameStateUtils *gamestate.GameStateUtils, tiManager *turnInformer
 
 	apiHandler := newAPIHandler(gameStateUtils)
 	apiProc := api.NewAPIProcessor(apiHandler)
-
-	// botStartInformerHandler := newBotStartInformerHandler(tiManager)
-	// botStartInformerProc := botstartinformer.NewBotStartInformerProcessor(botStartInformerHandler)
-
-	// mProc := thrift.NewTMultiplexedProcessor()
-	// mProc.RegisterProcessor("API", apiProc)
-	// mProc.RegisterProcessor("BotStartInformer", botStartInformerProc)
-	//
-	// server := thrift.NewTSimpleServer4(mProc, transport, transportFactory, protocolFactory)
-
 	server := thrift.NewTSimpleServer4(apiProc, transport, transportFactory, protocolFactory)
 
 	return server, nil

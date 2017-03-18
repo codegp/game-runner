@@ -43,7 +43,7 @@ func (u *GameDefUtils) Items() []gobj.Item {
 // InitBot initializes a new bot of type botTypeID for the team teamID at the location loc.
 // returns an error if botTypeID is not a valid bot type identifier, if location loc
 // does not exist, or if location loc is already occupied by a bot
-func (u *GameDefUtils) InitBot(teamID int32, loc gobj.Location, botTypeID int64) (gobj.Bot, error) {
+func (u *GameDefUtils) InitBot(teamID int64, loc gobj.Location, botTypeID int64) (gobj.Bot, error) {
 	botType := u.gsu.GameInfo().BotType(botTypeID)
 	if botType == nil {
 		return gobj.Bot{}, fmt.Errorf("botTypeID %d is not a valid id", botTypeID)
